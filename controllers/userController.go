@@ -15,6 +15,7 @@ func GetUsers(c *gin.Context) {
 
 	database.DB.Find(&users)
 
+	// return response
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
@@ -37,7 +38,7 @@ func CreateUser(c *gin.Context) {
 
 	database.DB.Create(&user)
 
-	// response
+	// return response
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
@@ -45,10 +46,36 @@ func CreateUser(c *gin.Context) {
 func GetUser(c *gin.Context) {
 	var user userModel.User
 
+	// check if exists
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found !"})
 		return
 	}
 
+	// return response
 	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
+// update user
+func UpdateUser(c *gin.Context) {
+	var user userModel.User
+
+	// check if exists
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found !"})
+		return
+	}
+
+	// validation
+	var userInput userModel.UpdateUserInput
+	if err := c.ShouldBindJSON(&userInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// update user
+	database.DB.Model(&user).Updates(userInput)
+
+	// return response
+	c.JSON(http.StatusOK, gin.H{"data": "user updated successfully"})
 }
