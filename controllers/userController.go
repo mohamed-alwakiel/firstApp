@@ -21,17 +21,17 @@ func GetUsers(c *gin.Context) {
 // create new user
 func CreateUser(c *gin.Context) {
 	// validation
-	var input userModel.CreateUserInput
+	var userInput userModel.CreateUserInput
 
-	if err := c.ShouldBindJSON(&input); err != nil {
+	if err := c.ShouldBindJSON(&userInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// store user
 	user := userModel.User{
-		Name:  input.Name,
-		Email: input.Email,
+		Name:  userInput.Name,
+		Email: userInput.Email,
 		Age:   20,
 	}
 
@@ -41,3 +41,14 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+// get user by id
+func GetUser(c *gin.Context) {
+	var user userModel.User
+
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found !"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
