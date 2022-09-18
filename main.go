@@ -19,6 +19,7 @@ func main() {
 	r.POST("/users", controllers.CreateUser)
 	r.GET("/users/:id", controllers.GetUser)
 	r.PATCH("/users/:id", controllers.UpdateUser)
+	r.DELETE("/users/:id", controllers.DeleteUser)
 
 	// listen and serve on 0.0.0.0:8080
 	r.Run()

@@ -46,7 +46,7 @@ func CreateUser(c *gin.Context) {
 func GetUser(c *gin.Context) {
 	var user userModel.User
 
-	// check if exists
+	// check if exist
 	if err := database.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found !"})
 		return
@@ -77,5 +77,22 @@ func UpdateUser(c *gin.Context) {
 	database.DB.Model(&user).Updates(userInput)
 
 	// return response
-	c.JSON(http.StatusOK, gin.H{"data": "user updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "User Updated Successfully", "data": user})
+}
+
+// delete user
+func DeleteUser(c *gin.Context) {
+	var user userModel.User
+
+	// check if exist
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found !"})
+		return
+	}
+
+	// delete user
+	database.DB.Delete(&user)
+
+	// return response
+	c.JSON(http.StatusOK, gin.H{"message": "User Deleted Successfully"})
 }
