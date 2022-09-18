@@ -1,33 +1,23 @@
 package main
 
 import (
-	"fmt"
 	// "net/http"
-
-	"github.com/mohamed-alwakiel/firstApp/models"
-
+	"example/firstApp/controllers"
+	"example/firstApp/database"
+	"github.com/gin-gonic/gin"
 )
 
-// type User struct {
-// 	ID    uint    `json:"id" gorm:"primary_key"`
-// 	Name  string  `json:"user_name"`
-// 	Email *string `json:"email"`
-// 	Age   uint    `json:"user_age"`
-// }
-
 func main() {
-	fmt.Println("Hello Wiko")
-	models.HelloWiko()
 	// initialize router
-	// r := gin.Default()
+	r := gin.Default()
 
 	// connect to data base
-	// models.ConnectDatabase()
+	database.ConnectDatabase()
 
-	// r.GET("/", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{"data": "Hello World"})
-	// })
+	// routes
+	r.GET("/users", controllers.GetUsers)
+	r.POST("/users", controllers.CreateUser)
 
-	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	// r.Run()
+	// listen and serve on 0.0.0.0:8080
+	r.Run()
 }
