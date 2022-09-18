@@ -5,7 +5,6 @@ import (
 	"example/firstApp/models"
 
 	"github.com/gin-gonic/gin"
-
 	"net/http"
 )
 
@@ -33,7 +32,7 @@ func CreateUser(c *gin.Context) {
 	user := userModel.User{
 		Name:  userInput.Name,
 		Email: userInput.Email,
-		Age:   20,
+		Age:   userInput.Age,
 	}
 
 	database.DB.Create(&user)
@@ -73,8 +72,14 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	updatedUser := userModel.User{
+		Name:  userInput.Name,
+		Email: userInput.Email,
+		Age:   userInput.Age,
+	}
+
 	// update user
-	database.DB.Model(&user).Updates(userInput)
+	database.DB.Model(&user).Updates(updatedUser)
 
 	// return response
 	c.JSON(http.StatusOK, gin.H{"message": "User Updated Successfully", "data": user})
