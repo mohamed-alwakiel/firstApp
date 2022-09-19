@@ -21,7 +21,7 @@ func GetUsers(c *gin.Context) {
 // create new user
 func CreateUser(c *gin.Context) {
 	// validation
-	var userInput userModel.CreateUserInput
+	var userInput userModel.UserInput
 
 	if err := c.ShouldBindJSON(&userInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -66,7 +66,7 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	// validation
-	var userInput userModel.UpdateUserInput
+	var userInput userModel.UserInput
 	if err := c.ShouldBindJSON(&userInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

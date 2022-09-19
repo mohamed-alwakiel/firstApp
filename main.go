@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "net/http"
 	"example/firstApp/controllers"
 	"example/firstApp/database"
 	"github.com/gin-gonic/gin"
@@ -21,6 +20,6 @@ func main() {
 	r.PUT("/users/:id", controllers.UpdateUser)
 	r.DELETE("/users/:id", controllers.DeleteUser)
 
-	// listen and serve on 0.0.0.0:8080
+	// listen and serve on port [8080]
 	r.Run()
 }
