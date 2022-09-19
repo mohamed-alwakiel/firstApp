@@ -1,25 +1,27 @@
 package main
 
 import (
-	"example/firstApp/controllers"
 	"example/firstApp/database"
+	"example/firstApp/routes"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
+// connect to data base
+var db *gorm.DB = database.ConnectToSQL()
+
 func main() {
+	// close connection
+	defer database.CloseConnection(db)
+
 	// initialize router
-	r := gin.Default()
+	router := gin.New()
 
-	// connect to data base
-	database.ConnectDatabase()
+	// route
+	routes.MainRoute(router.Group(""))
 
-	// routes
-	r.GET("/users", controllers.GetUsers)
-	r.POST("/users", controllers.CreateUser)
-	r.GET("/users/:id", controllers.GetUser)
-	r.PUT("/users/:id", controllers.UpdateUser)
-	r.DELETE("/users/:id", controllers.DeleteUser)
-
-	// listen and serve on port [8080]
-	r.Run()
+	// connect to and run the server
+	router.Run(os.Getenv("LOCAL_HOST") + ":" + os.Getenv("SERVER_PORT"))
 }
