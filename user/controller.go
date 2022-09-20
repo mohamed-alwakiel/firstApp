@@ -1,18 +1,15 @@
-package controller
+package user
 
 import (
-	"example/firstApp/services"
-	"example/firstApp/validator"
-
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 // get all users
-func GetUsers(c *gin.Context) {
+func GetAll(c *gin.Context) {
 
-	users, err := services.GetUsers()
+	users, err := GetUsers()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -23,16 +20,16 @@ func GetUsers(c *gin.Context) {
 }
 
 // create new user
-func CreateUser(c *gin.Context) {
+func Create(c *gin.Context) {
 	// validation
-	var userInput validator.UserInput
+	var userInput UserInput
 	if err := c.ShouldBindJSON(&userInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// store user
-	user, err := services.CreateUser(userInput)
+	user, err := CreateUser(userInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,15 +40,15 @@ func CreateUser(c *gin.Context) {
 }
 
 // get user by id
-func GetUser(c *gin.Context) {
-	// calidate id - check if integer
-	id, err := services.CheckID(c.Param("id"))
+func Show(c *gin.Context) {
+	// validate id - check if integer
+	id, err := CheckID(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Enter valide number id"})
 		return
 	}
 
-	user, err := services.GetUser(id)
+	user, err := GetUser(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -62,23 +59,23 @@ func GetUser(c *gin.Context) {
 }
 
 // update user
-func UpdateUser(c *gin.Context) {
-	// calidate id - check if integer
-	id, err := services.CheckID(c.Param("id"))
+func Update(c *gin.Context) {
+	// validate id - check if integer
+	id, err := CheckID(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Enter valide number id"})
 		return
 	}
 
 	// validation
-	var userInput validator.UserInput
+	var userInput UserInput
 	if err := c.ShouldBindJSON(&userInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// update user
-	user, err := services.UpdateUser(id, userInput)
+	user, err := UpdateUser(id, userInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -89,15 +86,15 @@ func UpdateUser(c *gin.Context) {
 }
 
 // delete user
-func DeleteUser(c *gin.Context) {
-	// calidate id - check if integer
-	id, err := services.CheckID(c.Param("id"))
+func Delete(c *gin.Context) {
+	// validate id - check if integer
+	id, err := CheckID(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Enter valide number id"})
 		return
 	}
 
-	Err := services.DeleteUser(id)
+	Err := DeleteUser(id)
 	if Err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

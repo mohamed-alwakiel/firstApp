@@ -1,14 +1,12 @@
-package services
+package user
 
 import (
 	"example/firstApp/database"
-	models "example/firstApp/model"
-	"example/firstApp/validator"
 	"strconv"
 )
 
-func GetUsers() ([]models.User, error) {
-	users := make([]models.User, 0)
+func GetUsers() ([]User, error) {
+	users := make([]User, 0)
 
 	if err := database.DB.Find(&users).Error; err != nil {
 		return users, err
@@ -17,8 +15,8 @@ func GetUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func CreateUser(userInput validator.UserInput) (models.User, error) {
-	user := models.User{
+func CreateUser(userInput UserInput) (User, error) {
+	user := User{
 		Name:  userInput.Name,
 		Email: userInput.Email,
 		Age:   userInput.Age,
@@ -31,8 +29,8 @@ func CreateUser(userInput validator.UserInput) (models.User, error) {
 	return user, nil
 }
 
-func GetUser(id int) (models.User, error) {
-	var user models.User
+func GetUser(id int) (User, error) {
+	var user User
 
 	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return user, err
@@ -41,14 +39,14 @@ func GetUser(id int) (models.User, error) {
 	return user, nil
 }
 
-func UpdateUser(id int, userInput validator.UserInput) (models.User, error) {
-	var user models.User
+func UpdateUser(id int, userInput UserInput) (User, error) {
+	var user User
 
 	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return user, err
 	}
 
-	updatedUser := models.User{
+	updatedUser := User{
 		Name:  userInput.Name,
 		Email: userInput.Email,
 		Age:   userInput.Age,
@@ -63,7 +61,7 @@ func UpdateUser(id int, userInput validator.UserInput) (models.User, error) {
 }
 
 func DeleteUser(id int) error {
-	var user models.User
+	var user User
 
 	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return err

@@ -2,7 +2,7 @@ package main
 
 import (
 	"example/firstApp/database"
-	"example/firstApp/routes"
+	"example/firstApp/route"
 	"os"
 
 	"github.com/gin-gonic/gin"
