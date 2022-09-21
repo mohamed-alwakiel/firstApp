@@ -8,8 +8,16 @@ import (
 
 // get all users
 func GetAll(c *gin.Context) {
+	var filter_input FilterInput
 
-	users, err := GetUsers()
+	err := c.ShouldBindJSON(&filter_input)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// get all users
+	users, err := GetUsers(filter_input)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -96,7 +104,7 @@ func Delete(c *gin.Context) {
 
 	Err := DeleteUser(id)
 	if Err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": Err.Error()})
 		return
 	}
 

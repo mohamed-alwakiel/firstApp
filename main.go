@@ -3,6 +3,7 @@ package main
 import (
 	"example/firstApp/database"
 	"example/firstApp/route"
+	"example/firstApp/user"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,9 @@ var db *gorm.DB = database.ConnectToSQL()
 func main() {
 	// close connection
 	defer database.CloseConnection(db)
+
+	// need to handle
+	db.AutoMigrate(&user.User{})
 
 	// initialize router
 	router := gin.New()

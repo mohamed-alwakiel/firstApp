@@ -1,79 +1,53 @@
 package user
 
 import (
-	"example/firstApp/database"
+	// "fmt"
+	// "reflect"
 	"strconv"
 )
 
-func GetUsers() ([]User, error) {
-	users := make([]User, 0)
-
-	if err := database.DB.Find(&users).Error; err != nil {
-		return users, err
+// get all users
+func GetUsers(filterInput FilterInput) ([]User, error) {
+	switch {
+	case filterInput.Name != "" && filterInput.Email != "":
+		return FindMultiFilter(filterInput)
+	case filterInput.Name != "":
+		return FindFilter("name", filterInput.Name)
+	case filterInput.Email != "":
+		return FindFilter("email", filterInput.Email)
 	}
-
-	return users, nil
+	return FindAll()
 }
 
+// create new user
 func CreateUser(userInput UserInput) (User, error) {
-	user := User{
-		Name:  userInput.Name,
-		Email: userInput.Email,
-		Age:   userInput.Age,
-	}
-
-	if err := database.DB.Create(&user).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
+	return Store(userInput)
 }
 
+// get specific user
 func GetUser(id int) (User, error) {
-	var user User
-
-	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
+	return FindUser(id)
 }
 
+// update specific user
 func UpdateUser(id int, userInput UserInput) (User, error) {
-	var user User
-
-	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
+	user, err := FindUser(id)
+	if err != nil {
 		return user, err
 	}
-
-	updatedUser := User{
-		Name:  userInput.Name,
-		Email: userInput.Email,
-		Age:   userInput.Age,
-	}
-
-	// update user
-	if err := database.DB.Model(&user).Updates(updatedUser).Error; err != nil {
-		return user, err
-	}
-
-	return user, nil
+	return Edit(user, userInput)
 }
 
+// delete specific user
 func DeleteUser(id int) error {
-	var user User
-
-	if err := database.DB.Where("id = ?", id).First(&user).Error; err != nil {
+	user, err := FindUser(id)
+	if err != nil {
 		return err
 	}
-
-	if err := database.DB.Delete(&user).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return Destroy(user)
 }
 
+// check id validate - must be integer
 func CheckID(id string) (int, error) {
 	val, err := strconv.Atoi(id)
 

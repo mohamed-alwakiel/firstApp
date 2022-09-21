@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"example/firstApp/user"
+	// "example/firstApp/user"
 
 	"github.com/joho/godotenv"
 
@@ -52,7 +52,7 @@ func ConnectToSQL() *gorm.DB {
 		panic("Faild to connect to database !")
 	}
 
-	db.AutoMigrate(&user.User{})
+	// db.AutoMigrate(&user.User{})
 	DB = db
 
 	return db

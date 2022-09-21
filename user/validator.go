@@ -5,3 +5,8 @@ type UserInput struct {
 	Email string `json:"email" binding:"required,email"`
 	Age   uint   `json:"age" binding:"min=18"`
 }
+
+type FilterInput struct {
+	Name  string `json:"name" `
+	Email string `json:"email"`
+}
