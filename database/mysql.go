@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	// "example/firstApp/user"
-
 	"github.com/joho/godotenv"
 
 	"gorm.io/driver/mysql"

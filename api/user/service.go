@@ -7,30 +7,22 @@ import (
 )
 
 // get all users
-func GetUsers(filterInput FilterInput) ([]User, error) {
-	switch {
-	case filterInput.Name != "" && filterInput.Email != "":
-		return FindMultiFilter(filterInput)
-	case filterInput.Name != "":
-		return FindFilter("name", filterInput.Name)
-	case filterInput.Email != "":
-		return FindFilter("email", filterInput.Email)
-	}
-	return FindAll()
+func GetUsersService(filterInput FilterInput) ([]User, error) {
+	return FindUsers(filterInput)
 }
 
 // create new user
-func CreateUser(userInput UserInput) (User, error) {
+func CreateUserService(userInput UserInput) (User, error) {
 	return Store(userInput)
 }
 
 // get specific user
-func GetUser(id int) (User, error) {
+func GetUserService(id int) (User, error) {
 	return FindUser(id)
 }
 
 // update specific user
-func UpdateUser(id int, userInput UserInput) (User, error) {
+func UpdateUserService(id int, userInput UserInput) (User, error) {
 	user, err := FindUser(id)
 	if err != nil {
 		return user, err
@@ -39,7 +31,7 @@ func UpdateUser(id int, userInput UserInput) (User, error) {
 }
 
 // delete specific user
-func DeleteUser(id int) error {
+func DeleteUserService(id int) error {
 	user, err := FindUser(id)
 	if err != nil {
 		return err
@@ -56,4 +48,9 @@ func CheckID(id string) (int, error) {
 	}
 
 	return val, nil
+}
+
+// get all users
+func GetEmailsService(filterEmail FilterEmail) ([]Email, error) {
+	return FindEmails(filterEmail)
 }

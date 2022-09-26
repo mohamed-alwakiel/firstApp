@@ -7,17 +7,16 @@ import (
 )
 
 // get all users
-func GetAll(c *gin.Context) {
-	var filter_input FilterInput
-
-	err := c.ShouldBindJSON(&filter_input)
+func GetUsers(c *gin.Context) {
+	var filterInput FilterInput
+	err := c.ShouldBindJSON(&filterInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// get all users
-	users, err := GetUsers(filter_input)
+	users, err := GetUsersService(filterInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -28,7 +27,7 @@ func GetAll(c *gin.Context) {
 }
 
 // create new user
-func Create(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	// validation
 	var userInput UserInput
 	if err := c.ShouldBindJSON(&userInput); err != nil {
@@ -37,7 +36,7 @@ func Create(c *gin.Context) {
 	}
 
 	// store user
-	user, err := CreateUser(userInput)
+	user, err := CreateUserService(userInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -48,7 +47,7 @@ func Create(c *gin.Context) {
 }
 
 // get user by id
-func Show(c *gin.Context) {
+func GetUser(c *gin.Context) {
 	// validate id - check if integer
 	id, err := CheckID(c.Param("id"))
 	if err != nil {
@@ -56,7 +55,7 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	user, err := GetUser(id)
+	user, err := GetUserService(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -67,7 +66,7 @@ func Show(c *gin.Context) {
 }
 
 // update user
-func Update(c *gin.Context) {
+func UpdateUser(c *gin.Context) {
 	// validate id - check if integer
 	id, err := CheckID(c.Param("id"))
 	if err != nil {
@@ -83,7 +82,7 @@ func Update(c *gin.Context) {
 	}
 
 	// update user
-	user, err := UpdateUser(id, userInput)
+	user, err := UpdateUserService(id, userInput)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -94,7 +93,7 @@ func Update(c *gin.Context) {
 }
 
 // delete user
-func Delete(c *gin.Context) {
+func DeleteUser(c *gin.Context) {
 	// validate id - check if integer
 	id, err := CheckID(c.Param("id"))
 	if err != nil {
@@ -102,7 +101,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	Err := DeleteUser(id)
+	Err := DeleteUserService(id)
 	if Err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": Err.Error()})
 		return
@@ -111,3 +110,29 @@ func Delete(c *gin.Context) {
 	// return response
 	c.JSON(http.StatusOK, gin.H{"message": "User Deleted Successfully"})
 }
+
+// get emails 
+func GetEmails(c *gin.Context) {
+	var filterEmail FilterEmail
+	err := c.ShouldBindJSON(&filterEmail)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// get all emails
+	users, err := GetEmailsService(filterEmail)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// return response
+	c.JSON(http.StatusOK, gin.H{"data": users})
+}
+
+
+
+
+
+

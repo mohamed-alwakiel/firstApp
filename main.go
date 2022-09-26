@@ -1,9 +1,11 @@
 package main
 
 import (
+	"example/firstApp/api/course"
+	"example/firstApp/api/material"
+	"example/firstApp/api/user"
 	"example/firstApp/database"
 	"example/firstApp/route"
-	"example/firstApp/user"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,7 @@ func main() {
 	defer database.CloseConnection(db)
 
 	// need to handle
-	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&user.User{}, &course.Course{}, &material.Material{})
 
 	// initialize router
 	router := gin.New()

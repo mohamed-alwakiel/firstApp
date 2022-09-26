@@ -9,30 +9,16 @@ type User struct {
 	Name  string `gorm:"type:varchar(150);not null" json:"name" filter:"searchable;filterable"`
 	Email string `gorm:"type:varchar(150);not null;unique" json:"email" filter:"searchable;filterable"`
 	Age   uint   `json:"age"`
+	//Courses []*course.Course `gorm:"many2many:user_courses;" json:"courses"`
 }
 
 // get all users
-func FindAll() ([]User, error) {
+func FindUsers(filterInput FilterInput) ([]User, error) {
 	users := make([]User, 0)
-	if err := database.DB.Find(&users).Error; err != nil {
-		return users, err
-	}
-	return users, nil
-}
 
-// get filterd users with specific col
-func FindFilter(field string, value string) ([]User, error) {
-	users := make([]User, 0)
-	if err := database.DB.Where(field+" LIKE ?", "%"+value+"%").Find(&users).Error; err != nil {
-		return users, err
-	}
-	return users, nil
-}
+	query := UserQuery(filterInput)
 
-// get filterd user with multi col
-func FindMultiFilter(filterInput FilterInput) ([]User, error) {
-	users := make([]User, 0)
-	if err := database.DB.Where("name LIKE ? AND email LIKE ?", "%"+filterInput.Name+"%", "%"+filterInput.Email+"%").Find(&users).Error; err != nil {
+	if err := database.DB.Where(query).Find(&users).Error; err != nil {
 		return users, err
 	}
 	return users, nil
@@ -88,4 +74,16 @@ func Destroy(user User) error {
 	}
 
 	return nil
+}
+
+// get all emails
+func FindEmails(filterEmail FilterEmail) ([]Email, error) {
+	users := make([]Email, 0)
+
+	query := EmailQuery(filterEmail)
+
+	if err := database.DB.Model(User{}).Select("email").Where(query).Find(&users).Error; err != nil {
+		return users, err
+	}
+	return users, nil
 }
